@@ -1,21 +1,48 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
+
+interface PastCareers {
+  id?: number;
+  draft?: boolean;
+  ca_title: string;
+  ca_content: string;
+  ca_rank: string;
+  ca_contract: string;
+  ca_start_date: string;
+  ca_end_date: string;
+  ca_date_type: string;
+  order: number;
+}
+
+interface Educations {
+  id?: number;
+  draft?: boolean;
+  edu_title: string;
+  edu_class: string;
+  edu_major: string;
+  edu_start_date: string;
+  edu_end_date: string;
+  edu_degree: string;
+  order: number;
+}
 
 function App() {
-  const [pastCareer, setPastCareer] = useState([]);
-  const [toBeDeletedPastCareer, setToBeDeletedPastCareer] = useState([]);
-  const [education, setEducation] = useState([]);
+  const [pastCareer, setPastCareer] = useState<PastCareers[]>([]);
+  const [toBeDeletedPastCareer, setToBeDeletedPastCareer] = useState<
+    (number | undefined)[]
+  >([]);
+  const [education, setEducation] = useState<Educations[]>([]);
   const [toBeDeletedEducation, setToBeDeletedEducation] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:3001/past_career')
+    fetch("http://localhost:3001/past_career")
       .then((r) => r.json())
-      .then((data) => {
+      .then((data: PastCareers[]) => {
         setPastCareer(data.sort((a, b) => a.order - b.order));
       });
 
-    fetch('http://localhost:3001/education')
+    fetch("http://localhost:3001/education")
       .then((r) => r.json())
-      .then((data) => {
+      .then((data: Educations[]) => {
         setEducation(data.sort((a, b) => a.order - b.order));
       });
   }, []);
@@ -28,7 +55,7 @@ function App() {
             await Promise.all(
               toBeDeletedPastCareer.map((id) => {
                 return fetch(`http://localhost:3001/past_career/${id}`, {
-                  method: 'DELETE',
+                  method: "DELETE",
                 });
               })
             );
@@ -39,10 +66,10 @@ function App() {
                   delete item.id;
                   delete item.draft;
 
-                  return fetch('http://localhost:3001/past_career', {
-                    method: 'POST',
+                  return fetch("http://localhost:3001/past_career", {
+                    method: "POST",
                     headers: {
-                      'Content-Type': 'application/json',
+                      "Content-Type": "application/json",
                     },
                     body: JSON.stringify(item),
                   });
@@ -53,24 +80,24 @@ function App() {
                 .filter((item) => !item.draft)
                 .map((item) => {
                   return fetch(`http://localhost:3001/past_career/${item.id}`, {
-                    method: 'PATCH',
+                    method: "PATCH",
                     headers: {
-                      'Content-type': 'application/json; charset=UTF-8',
+                      "Content-type": "application/json; charset=UTF-8",
                     },
                     body: JSON.stringify(item),
                   });
                 })
             );
 
-            await fetch('http://localhost:3001/past_career')
+            await fetch("http://localhost:3001/past_career")
               .then((r) => r.json())
-              .then((data) => {
+              .then((data: PastCareers[]) => {
                 setPastCareer(data.sort((a, b) => a.order - b.order));
               });
 
-            await fetch('http://localhost:3001/education')
+            await fetch("http://localhost:3001/education")
               .then((r) => r.json())
-              .then((data) => {
+              .then((data: Educations[]) => {
                 setEducation(data.sort((a, b) => a.order - b.order));
               });
           }}
@@ -220,8 +247,8 @@ function App() {
 
                 <div
                   style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
+                    display: "flex",
+                    justifyContent: "space-between",
                   }}
                 >
                   <div>
@@ -286,13 +313,13 @@ function App() {
                   ...p,
                   {
                     id: p.length + 1,
-                    ca_title: '',
-                    ca_content: '',
-                    ca_rank: '',
-                    ca_contract: '',
-                    ca_start_date: '',
-                    ca_end_date: '',
-                    ca_date_type: '',
+                    ca_title: "",
+                    ca_content: "",
+                    ca_rank: "",
+                    ca_contract: "",
+                    ca_start_date: "",
+                    ca_end_date: "",
+                    ca_date_type: "",
                     order,
                     draft: true,
                   },
@@ -351,8 +378,8 @@ function App() {
 
                 <div
                   style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
+                    display: "flex",
+                    justifyContent: "space-between",
                   }}
                 >
                   <div>
