@@ -31,13 +31,12 @@
 
 ## 사용한 Library와 그 이유
 
-
+styled-components: css 문법 그대로 사용할 수 있어서 추가했습니다.
 
 ## 과제 진행 계획
 ### 기본 기능
-[ ] App.tsx에서 missing type 채워넣기
-[ ] 화면 layout 컴포넌트 구현
-[ ] 필요한 컴포넌트 구현: button, input, card, header, modal
+[X] App.tsx에서 missing type 채워넣기
+[ ] 필요한 컴포넌트 구현: button, input, card, item, option, select, wrapper component 구현
 [ ] App 페이지에 컴포넌트 적용
 [ ] 학력사항 구현하기
 [ ] 시작일, 종료일 입력 시 종료일이 시작일보다 빠르지 않도록 validation
