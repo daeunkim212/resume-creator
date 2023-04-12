@@ -37,7 +37,9 @@ function App() {
     (number | undefined)[]
   >([]);
   const [education, setEducation] = useState<Educations[]>([]);
-  const [toBeDeletedEducation, setToBeDeletedEducation] = useState([]);
+  const [toBeDeletedEducation, setToBeDeletedEducation] = useState<
+    (number | undefined)[]
+  >([]);
 
   useEffect(() => {
     fetch("http://localhost:3001/past_career")
@@ -95,10 +97,47 @@ function App() {
                 })
             );
 
-            await fetch("http://localhost:3001/past_career")
+            await Promise.all(
+              toBeDeletedEducation.map((id) => {
+                return fetch(`http://localhost:3001/education/${id}`, {
+                  method: "DELETE",
+                });
+              })
+            );
+            await Promise.all(
+              education
+                .filter((item) => item.draft)
+                .map((item) => {
+                  delete item.id;
+                  delete item.draft;
+
+                  return fetch("http://localhost:3001/education", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(item),
+                  });
+                })
+            );
+            await Promise.all(
+              education
+                .filter((item) => !item.draft)
+                .map((item) => {
+                  return fetch(`http://localhost:3001/education/${item.id}`, {
+                    method: "PATCH",
+                    headers: {
+                      "Content-type": "application/json; charset=UTF-8",
+                    },
+                    body: JSON.stringify(item),
+                  });
+                })
+            );
+
+            await fetch("http://localhost:3001/education")
               .then((r) => r.json())
-              .then((data: PastCareers[]) => {
-                setPastCareer(data.sort((a, b) => a.order - b.order));
+              .then((data: Educations[]) => {
+                setEducation(data.sort((a, b) => a.order - b.order));
               });
 
             await fetch("http://localhost:3001/education")
@@ -325,17 +364,66 @@ function App() {
 
         <h2>학력사항</h2>
         <div>
-          {education.map((item) => {
+          {education.map((item, index) => {
             return (
               <Item
                 key={item.id}
-                deleteItem={() => {}}
-                moveUpItem={() => {}}
-                moveDownItem={() => {}}
+                deleteItem={() => {
+                  setToBeDeletedEducation((ed) => [...ed, item.id]);
+                  setEducation((ed) =>
+                    ed.filter((prevItem) => prevItem.id !== item.id)
+                  );
+                }}
+                moveUpItem={() => {
+                  const next = [...education];
+                  const element = next.splice(index, 1)[0];
+                  next.splice(index - 1, 0, element);
+
+                  setEducation(
+                    next.map((item, index) => {
+                      return {
+                        ...item,
+                        order: index,
+                      };
+                    })
+                  );
+                }}
+                moveDownItem={() => {
+                  const next = [...education];
+                  const element = next.splice(index, 1)[0];
+                  next.splice(index + 1, 0, element);
+
+                  setEducation(
+                    next.map((item, index) => {
+                      return {
+                        ...item,
+                        order: index,
+                      };
+                    })
+                  );
+                }}
               >
                 <div>
                   <div>
-                    <Select name="edu_class" label="학교구분">
+                    <Select
+                      name="edu_class"
+                      label="학교구분"
+                      value={item.edu_class}
+                      onChange={(e) => {
+                        setEducation((ed) => {
+                          return ed.map((prevItem) => {
+                            if (prevItem.id == item.id) {
+                              return {
+                                ...prevItem,
+                                edu_title: e.target.value,
+                              };
+                            }
+
+                            return prevItem;
+                          });
+                        });
+                      }}
+                    >
                       <Option>선택</Option>
                       <Option value="GRADUATESCHOOL">대학원</Option>
                       <Option value="UNIVERSITY">대학교</Option>
@@ -344,17 +432,129 @@ function App() {
                     </Select>
                   </div>
                   <div>
-                    <Input label="학교명" type="text" name="edu_title" />
+                    <Input
+                      label="학교명"
+                      type="text"
+                      value={item.edu_title}
+                      name="edu_title"
+                      onChange={(e) => {
+                        setEducation((ed) => {
+                          return ed.map((prevItem) => {
+                            if (prevItem.id == item.id) {
+                              return {
+                                ...prevItem,
+                                edu_title: e.target.value,
+                              };
+                            }
+
+                            return prevItem;
+                          });
+                        });
+                      }}
+                    />
+                    {/* <Input
+                      label="학교명"
+                      type="text"
+                      name="edu_title"
+                      value={item.edu_title}
+                      onChange={(e) => {
+                        setPastCareer((ed) => {
+                          return ed.map((prevItem) => {
+                            if (prevItem.id == item.id) {
+                              return {
+                                ...prevItem,
+                                edu_title: e.target.value,
+                              };
+                            }
+
+                            return prevItem;
+                          });
+                        });
+                      }}
+                    /> */}
                   </div>
                   <div style={{ display: "flex" }}>
-                    <Input type="date" name="edu_start_date" />
-                    <Input type="date" name="edu_end_date" />
+                    <Input
+                      type="date"
+                      name="edu_start_date"
+                      value={item.edu_start_date}
+                      onChange={(e) => {
+                        setEducation((ed) => {
+                          return ed.map((prevItem) => {
+                            if (prevItem.id == item.id) {
+                              return {
+                                ...prevItem,
+                                edu_start_date: e.target.value,
+                              };
+                            }
+
+                            return prevItem;
+                          });
+                        });
+                      }}
+                    />
+                    <Input
+                      type="date"
+                      name="edu_end_date"
+                      value={item.edu_end_date}
+                      onChange={(e) => {
+                        setEducation((ed) => {
+                          return ed.map((prevItem) => {
+                            if (prevItem.id == item.id) {
+                              return {
+                                ...prevItem,
+                                edu_end_date: e.target.value,
+                              };
+                            }
+
+                            return prevItem;
+                          });
+                        });
+                      }}
+                    />
                   </div>
                   <div>
-                    <Input label="전공/계열" type="text" name="edu_major" />
+                    <Input
+                      label="전공/계열"
+                      type="text"
+                      value={item.edu_major}
+                      name="edu_major"
+                      onChange={(e) => {
+                        setEducation((ed) => {
+                          return ed.map((prevItem) => {
+                            if (prevItem.id == item.id) {
+                              return {
+                                ...prevItem,
+                                edu_major: e.target.value,
+                              };
+                            }
+
+                            return prevItem;
+                          });
+                        });
+                      }}
+                    />
                   </div>
                   <div>
-                    <Select name="edu_degree" label="졸업구분">
+                    <Select
+                      name="edu_degree"
+                      label="졸업구분"
+                      value={item.edu_degree}
+                      onChange={(e: { target: { value: any } }) => {
+                        setEducation((ed) => {
+                          return ed.map((prevItem) => {
+                            if (prevItem.id == item.id) {
+                              return {
+                                ...prevItem,
+                                edu_degree: e.target.value,
+                              };
+                            }
+
+                            return prevItem;
+                          });
+                        });
+                      }}
+                    >
                       <Option>선택</Option>
                       <Option value="GRADUATED">졸업</Option>
                       <Option value="PHD">박사</Option>
@@ -372,7 +572,28 @@ function App() {
           })}
 
           <div>
-            <Button onClick={() => {}}>+ 추가하기</Button>
+            <Button
+              onClick={() => {
+                const order = education.length + 1;
+
+                setEducation((ed) => [
+                  ...ed,
+                  {
+                    id: ed.length + 1,
+                    edu_title: "",
+                    edu_class: "",
+                    edu_major: "",
+                    edu_start_date: "",
+                    edu_end_date: "",
+                    edu_degree: "",
+                    order,
+                    draft: true,
+                  },
+                ]);
+              }}
+            >
+              + 추가하기
+            </Button>
           </div>
         </div>
       </div>
