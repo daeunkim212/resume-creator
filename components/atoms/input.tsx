@@ -1,6 +1,6 @@
 import React, { InputHTMLAttributes } from "react";
 import styled from "styled-components";
-import theme from "../src/theme";
+import theme from "../../src/theme";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   componentSize?: "small" | "medium" | "large";

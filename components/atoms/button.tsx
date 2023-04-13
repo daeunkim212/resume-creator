@@ -1,6 +1,6 @@
 import React, { ButtonHTMLAttributes } from "react";
 import styled from "styled-components";
-import theme from "../src/theme";
+import theme from "../../src/theme";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   color?: "primary" | "secondary" | "transparent";

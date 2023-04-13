@@ -1,6 +1,6 @@
 import React from "react";
-import Card from "./card";
-import Button from "./button";
+import Card from "../atoms/card";
+import Button from "../atoms/button";
 import styled from "styled-components";
 
 interface ItemProps {

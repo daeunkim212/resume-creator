@@ -1,6 +1,6 @@
 import React, { ChangeEvent, SelectHTMLAttributes } from "react";
 import styled from "styled-components";
-import theme from "../src/theme";
+import theme from "../../src/theme";
 
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
