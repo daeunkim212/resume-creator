@@ -5,6 +5,7 @@ import Input from "../components/atoms/input";
 import Select from "../components/atoms/select";
 import Item from "../components/molecules/item";
 import Modal from "../components/molecules/modal";
+import DateRangeInput from "../components/molecules/dateRangeInput";
 import { Educations, PastCareers } from "./types";
 
 function App() {
@@ -285,6 +286,17 @@ function App() {
                   moveDownItem={() => moveDownPastCareer(index)}
                 >
                   <div>
+                    <DateRangeInput
+                      startDate={item.ca_start_date}
+                      endDate={item.ca_end_date}
+                      onStartDateChange={(
+                        e: React.ChangeEvent<HTMLInputElement>
+                      ) => handlePastCareerChange(e, item.id, "ca_start_date")}
+                      onEndDateChange={(
+                        e: React.ChangeEvent<HTMLInputElement>
+                      ) => handlePastCareerChange(e, item.id, "ca_end_date")}
+                      checkboxMessage="재직중"
+                    />
                     <Input
                       label="회사명"
                       type="text"
@@ -293,26 +305,6 @@ function App() {
                         handlePastCareerChange(e, item.id, "ca_title")
                       }
                     />
-                    <div
-                      style={{
-                        display: "flex",
-                      }}
-                    >
-                      <Input
-                        type="date"
-                        value={item.ca_start_date}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          handlePastCareerChange(e, item.id, "ca_start_date")
-                        }
-                      />
-                      <Input
-                        type="date"
-                        value={item.ca_end_date}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          handlePastCareerChange(e, item.id, "ca_end_date")
-                        }
-                      />
-                    </div>
                     <Input
                       label="직급/직책"
                       type="text"
@@ -371,6 +363,17 @@ function App() {
                   moveDownItem={() => moveDownEducation(index)}
                 >
                   <div>
+                    <DateRangeInput
+                      startDate={item.edu_start_date}
+                      endDate={item.edu_end_date}
+                      onStartDateChange={(e) =>
+                        handleEducationChange(e, item.id, "edu_start_date")
+                      }
+                      onEndDateChange={(e) =>
+                        handleEducationChange(e, item.id, "edu_end_date")
+                      }
+                      checkboxMessage="재학중"
+                    />
                     <Select
                       name="edu_class"
                       label="학교구분"
@@ -387,7 +390,6 @@ function App() {
                       <Select.Option value="COLLEGE">전문대</Select.Option>
                       <Select.Option value="HIGHSCHOOL">고등학교</Select.Option>
                     </Select>
-
                     <Input
                       label="학교명"
                       type="text"
@@ -397,24 +399,6 @@ function App() {
                         handleEducationChange(e, item.id, "edu_title")
                       }
                     />
-                    <div style={{ display: "flex" }}>
-                      <Input
-                        type="date"
-                        name="edu_start_date"
-                        value={item.edu_start_date}
-                        onChange={(e) =>
-                          handleEducationChange(e, item.id, "edu_start_date")
-                        }
-                      />
-                      <Input
-                        type="date"
-                        name="edu_end_date"
-                        value={item.edu_end_date}
-                        onChange={(e) =>
-                          handleEducationChange(e, item.id, "edu_end_date")
-                        }
-                      />
-                    </div>
                     <Input
                       label="전공/계열"
                       type="text"
