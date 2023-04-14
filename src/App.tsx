@@ -1,9 +1,10 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import Button from "../components/atoms/button";
-import Item from "../components/molecules/item";
 import Wrapper from "../components/atoms/wrapper";
 import Input from "../components/atoms/input";
 import Select from "../components/atoms/select";
+import Item from "../components/molecules/item";
+import Modal from "../components/molecules/modal";
 import { Educations, PastCareers } from "./types";
 
 function App() {
@@ -238,14 +239,27 @@ function App() {
     fetchEducations();
   }
 
-  const [isOpen, setIsOpen] = useState(true);
+  const [isPastCareerModalOpen, setIsPastCareerModalOpen] = useState(false);
+  const [itemId, setItemId] = useState<number>();
 
-  const handleClick = () => {
-    setIsOpen(true);
+  const openPastCareerDeleteModal = (deletingItemId: number) => {
+    setItemId(deletingItemId);
+    setIsPastCareerModalOpen(true);
   };
 
-  const handleClose = () => {
-    setIsOpen(false);
+  const closePastCareerDelteModal = () => {
+    setIsPastCareerModalOpen(false);
+  };
+
+  const [isEducationModalOpen, setIsEducationModalOpen] = useState(false);
+
+  const openEducationDeleteModal = (deletingItemId: number) => {
+    setItemId(deletingItemId);
+    setIsEducationModalOpen(true);
+  };
+
+  const closeEducationDeleteModal = () => {
+    setIsEducationModalOpen(false);
   };
 
   return (
@@ -261,75 +275,81 @@ function App() {
         <div>
           {pastCareers.map((item, index) => {
             return (
-              <Item
-                key={item.id}
-                deleteItem={() => deletePastCareer(item.id)}
-                moveUpItem={() => moveUpPastCareer(index)}
-                moveDownItem={() => moveDownPastCareer(index)}
-              >
-                <div>
-                  <Input
-                    label="회사명"
-                    type="text"
-                    value={item.ca_title}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                      handlePastCareerChange(e, item.id, "ca_title")
-                    }
-                  />
-                  <div
-                    style={{
-                      display: "flex",
-                    }}
-                  >
+              <>
+                <Item
+                  key={item.id}
+                  deleteItem={() => {
+                    openPastCareerDeleteModal(item.id);
+                  }}
+                  moveUpItem={() => moveUpPastCareer(index)}
+                  moveDownItem={() => moveDownPastCareer(index)}
+                >
+                  <div>
                     <Input
-                      type="date"
-                      value={item.ca_start_date}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        handlePastCareerChange(e, item.id, "ca_start_date")
+                      label="회사명"
+                      type="text"
+                      value={item.ca_title}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        handlePastCareerChange(e, item.id, "ca_title")
                       }
                     />
+                    <div
+                      style={{
+                        display: "flex",
+                      }}
+                    >
+                      <Input
+                        type="date"
+                        value={item.ca_start_date}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          handlePastCareerChange(e, item.id, "ca_start_date")
+                        }
+                      />
+                      <Input
+                        type="date"
+                        value={item.ca_end_date}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          handlePastCareerChange(e, item.id, "ca_end_date")
+                        }
+                      />
+                    </div>
                     <Input
-                      type="date"
-                      value={item.ca_end_date}
+                      label="직급/직책"
+                      type="text"
+                      value={item.ca_rank}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        handlePastCareerChange(e, item.id, "ca_end_date")
+                        handlePastCareerChange(e, item.id, "ca_rank")
+                      }
+                    />
+                    <Select
+                      label="고용형태"
+                      value={item.ca_contract}
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                        handlePastCareerChange(e, item.id, "ca_contract")
+                      }
+                    >
+                      <Select.Option value="">선택</Select.Option>
+                      <Select.Option value="FULL_TIME_1">정규직</Select.Option>
+                      <Select.Option value="INTERN_1">계약직</Select.Option>
+                      <Select.Option value="IRREGULAR_1">인턴</Select.Option>
+                      <Select.Option value="PART_TIME_1">
+                        프리랜서
+                      </Select.Option>
+                      <Select.Option value="FREELANCER_1">
+                        아르바이트
+                      </Select.Option>
+                    </Select>
+                    <Input
+                      label="담당업무"
+                      type="text"
+                      value={item.ca_content}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        handlePastCareerChange(e, item.id, "ca_content")
                       }
                     />
                   </div>
-                  <Input
-                    label="직급/직책"
-                    type="text"
-                    value={item.ca_rank}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      handlePastCareerChange(e, item.id, "ca_rank")
-                    }
-                  />
-                  <Select
-                    label="고용형태"
-                    value={item.ca_contract}
-                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                      handlePastCareerChange(e, item.id, "ca_contract")
-                    }
-                  >
-                    <Select.Option value="">선택</Select.Option>
-                    <Select.Option value="FULL_TIME_1">정규직</Select.Option>
-                    <Select.Option value="INTERN_1">계약직</Select.Option>
-                    <Select.Option value="IRREGULAR_1">인턴</Select.Option>
-                    <Select.Option value="PART_TIME_1">프리랜서</Select.Option>
-                    <Select.Option value="FREELANCER_1">
-                      아르바이트
-                    </Select.Option>
-                  </Select>
-                  <Input
-                    label="담당업무"
-                    type="text"
-                    value={item.ca_content}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      handlePastCareerChange(e, item.id, "ca_content")
-                    }
-                  />
-                </div>
-              </Item>
+                </Item>
+              </>
             );
           })}
           <div>
@@ -343,84 +363,88 @@ function App() {
         <div>
           {educations.map((item, index) => {
             return (
-              <Item
-                key={item.id}
-                deleteItem={() => deleteEducation(item.id)}
-                moveUpItem={() => moveUpEducation(index)}
-                moveDownItem={() => moveDownEducation(index)}
-              >
-                <div>
-                  <Select
-                    name="edu_class"
-                    label="학교구분"
-                    value={item.edu_class}
-                    onChange={(e) =>
-                      handleEducationChange(e, item.id, "edu_class")
-                    }
-                  >
-                    <Select.Option>선택</Select.Option>
-                    <Select.Option value="GRADUATESCHOOL">대학원</Select.Option>
-                    <Select.Option value="UNIVERSITY">대학교</Select.Option>
-                    <Select.Option value="COLLEGE">전문대</Select.Option>
-                    <Select.Option value="HIGHSCHOOL">고등학교</Select.Option>
-                  </Select>
+              <div>
+                <Item
+                  key={item.id}
+                  deleteItem={() => openEducationDeleteModal(item.id)}
+                  moveUpItem={() => moveUpEducation(index)}
+                  moveDownItem={() => moveDownEducation(index)}
+                >
+                  <div>
+                    <Select
+                      name="edu_class"
+                      label="학교구분"
+                      value={item.edu_class}
+                      onChange={(e) =>
+                        handleEducationChange(e, item.id, "edu_class")
+                      }
+                    >
+                      <Select.Option>선택</Select.Option>
+                      <Select.Option value="GRADUATESCHOOL">
+                        대학원
+                      </Select.Option>
+                      <Select.Option value="UNIVERSITY">대학교</Select.Option>
+                      <Select.Option value="COLLEGE">전문대</Select.Option>
+                      <Select.Option value="HIGHSCHOOL">고등학교</Select.Option>
+                    </Select>
 
-                  <Input
-                    label="학교명"
-                    type="text"
-                    value={item.edu_title}
-                    name="edu_title"
-                    onChange={(e) =>
-                      handleEducationChange(e, item.id, "edu_title")
-                    }
-                  />
-                  <div style={{ display: "flex" }}>
                     <Input
-                      type="date"
-                      name="edu_start_date"
-                      value={item.edu_start_date}
+                      label="학교명"
+                      type="text"
+                      value={item.edu_title}
+                      name="edu_title"
                       onChange={(e) =>
-                        handleEducationChange(e, item.id, "edu_start_date")
+                        handleEducationChange(e, item.id, "edu_title")
                       }
                     />
+                    <div style={{ display: "flex" }}>
+                      <Input
+                        type="date"
+                        name="edu_start_date"
+                        value={item.edu_start_date}
+                        onChange={(e) =>
+                          handleEducationChange(e, item.id, "edu_start_date")
+                        }
+                      />
+                      <Input
+                        type="date"
+                        name="edu_end_date"
+                        value={item.edu_end_date}
+                        onChange={(e) =>
+                          handleEducationChange(e, item.id, "edu_end_date")
+                        }
+                      />
+                    </div>
                     <Input
-                      type="date"
-                      name="edu_end_date"
-                      value={item.edu_end_date}
+                      label="전공/계열"
+                      type="text"
+                      value={item.edu_major}
+                      name="edu_major"
                       onChange={(e) =>
-                        handleEducationChange(e, item.id, "edu_end_date")
+                        handleEducationChange(e, item.id, "edu_major")
                       }
                     />
+                    <Select
+                      name="edu_degree"
+                      label="졸업구분"
+                      value={item.edu_degree}
+                      onChange={(e) =>
+                        handleEducationChange(e, item.id, "edu_degree")
+                      }
+                    >
+                      <Select.Option>선택</Select.Option>
+                      <Select.Option value="GRADUATED">졸업</Select.Option>
+                      <Select.Option value="PHD">박사</Select.Option>
+                      <Select.Option value="MASTER">석사</Select.Option>
+                      <Select.Option value="BACHELOR">학사</Select.Option>
+                      <Select.Option value="ATTENDING">재학</Select.Option>
+                      <Select.Option value="EXCHANGE">교환학생</Select.Option>
+                      <Select.Option value="LEAVE">중단</Select.Option>
+                      <Select.Option value="ABSENCE">휴학</Select.Option>
+                    </Select>
                   </div>
-                  <Input
-                    label="전공/계열"
-                    type="text"
-                    value={item.edu_major}
-                    name="edu_major"
-                    onChange={(e) =>
-                      handleEducationChange(e, item.id, "edu_major")
-                    }
-                  />
-                  <Select
-                    name="edu_degree"
-                    label="졸업구분"
-                    value={item.edu_degree}
-                    onChange={(e) =>
-                      handleEducationChange(e, item.id, "edu_degree")
-                    }
-                  >
-                    <Select.Option>선택</Select.Option>
-                    <Select.Option value="GRADUATED">졸업</Select.Option>
-                    <Select.Option value="PHD">박사</Select.Option>
-                    <Select.Option value="MASTER">석사</Select.Option>
-                    <Select.Option value="BACHELOR">학사</Select.Option>
-                    <Select.Option value="ATTENDING">재학</Select.Option>
-                    <Select.Option value="EXCHANGE">교환학생</Select.Option>
-                    <Select.Option value="LEAVE">중단</Select.Option>
-                    <Select.Option value="ABSENCE">휴학</Select.Option>
-                  </Select>
-                </div>
-              </Item>
+                </Item>
+              </div>
             );
           })}
 
@@ -429,6 +453,76 @@ function App() {
           </div>
         </div>
       </div>
+
+      <Modal
+        isOpen={isPastCareerModalOpen}
+        onClose={() => closePastCareerDelteModal()}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            padding: "8px 60px",
+          }}
+        >
+          <p>삭제하시겠습니까?</p>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            padding: "8px 60px",
+            gap: "4px",
+          }}
+        >
+          <Button color="secondary" onClick={() => closePastCareerDelteModal()}>
+            안할래요
+          </Button>
+          <Button
+            onClick={() => {
+              itemId ? deletePastCareer(itemId) : null;
+              closePastCareerDelteModal();
+            }}
+          >
+            삭제할래요
+          </Button>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={isEducationModalOpen}
+        onClose={() => closeEducationDeleteModal()}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            padding: "8px 60px",
+          }}
+        >
+          <p>삭제하시겠습니까?</p>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            padding: "8px 60px",
+            gap: "4px",
+          }}
+        >
+          <Button color="secondary" onClick={() => closeEducationDeleteModal()}>
+            안할래요
+          </Button>
+          <Button
+            onClick={() => {
+              itemId ? deleteEducation(itemId) : null;
+              closeEducationDeleteModal();
+            }}
+          >
+            삭제할래요
+          </Button>
+        </div>
+      </Modal>
     </Wrapper>
   );
 }
