@@ -1,4 +1,7 @@
-import React, { ChangeEvent, SelectHTMLAttributes } from "react";
+import React, {
+  SelectHTMLAttributes,
+  OptionHTMLAttributes,
+} from "react";
 import styled from "styled-components";
 import theme from "../../src/theme";
 
@@ -20,6 +23,16 @@ export default function Select({
     </SelectContainer>
   );
 }
+
+interface OptionProps extends OptionHTMLAttributes<HTMLOptionElement> {
+  children: React.ReactNode;
+}
+
+function Option({ children, ...props }: OptionProps) {
+  return <StyledOption {...props}>{children}</StyledOption>;
+}
+
+const StyledOption = styled.option``;
 
 const SelectContainer = styled.div`
   display: flex;
@@ -50,3 +63,5 @@ const StyledSelect = styled.select`
     outline: none;
   }
 `;
+
+Select.Option = Option;
