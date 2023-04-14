@@ -57,6 +57,7 @@ const StyledButton = styled.button<StyledButtonProps>`
       ? "8px 16px"
       : "12px 24px"};
   width: ${({ isFullWidth }) => (isFullWidth ? "100%" : "auto")};
+  height: fit-content;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;

@@ -40,6 +40,7 @@ const InputLabel = styled.label<{
       : "1.2rem"};
   font-weight: 500;
   color: ${theme.color.black};
+  width: 4rem;
 `;
 
 const StyledInput = styled.input<{
@@ -57,6 +58,7 @@ const StyledInput = styled.input<{
   border-radius: 4px;
   padding: 8px 12px;
   transition: border-color 0.2s ease-in-out;
+  flex-grow: 1;
 
   &:focus {
     border-color: ${theme.color.blue};

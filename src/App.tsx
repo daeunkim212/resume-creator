@@ -7,6 +7,7 @@ import Item from "../components/molecules/item";
 import Modal from "../components/molecules/modal";
 import DateRangeInput from "../components/molecules/dateRangeInput";
 import { Educations, PastCareers } from "./types";
+import styled from "styled-components";
 
 function App() {
   const [pastCareers, setPastCareers] = useState<PastCareers[]>([]);
@@ -27,7 +28,7 @@ function App() {
     fetch("http://localhost:3001/past_career")
       .then((r) => r.json())
       .then((data: PastCareers[]) => {
-        setPastCareers(data.sort((a, b) => a.order - b.order));
+        setPastCareers(data.sort((a, b) => b.order - a.order));
       });
   };
 
@@ -35,7 +36,7 @@ function App() {
     fetch("http://localhost:3001/education")
       .then((r) => r.json())
       .then((data: Educations[]) => {
-        setEducations(data.sort((a, b) => a.order - b.order));
+        setEducations(data.sort((a, b) => b.order - a.order));
       });
   };
 
@@ -76,7 +77,6 @@ function App() {
 
   const createNewPastCareer = () => {
     setPastCareers((p) => [
-      ...p,
       {
         id: p.length + 1,
         ca_title: "",
@@ -89,6 +89,7 @@ function App() {
         order: pastCareers.length + 1,
         draft: true,
       },
+      ...p,
     ]);
   };
 
@@ -148,7 +149,6 @@ function App() {
 
   const createNewEducation = () => {
     setEducations((ed) => [
-      ...ed,
       {
         id: ed.length + 1,
         draft: true,
@@ -160,6 +160,7 @@ function App() {
         edu_degree: "",
         order: educations.length + 1,
       },
+      ...ed,
     ]);
   };
 
@@ -265,94 +266,90 @@ function App() {
 
   return (
     <Wrapper>
-      <div>
-        <Button onClick={async () => handleSave()}>저장</Button>
-      </div>
-
-      <hr />
-
-      <div>
-        <h2>전 직장 경력</h2>
-        <div>
+      <BodyContainer>
+        <Header2Container>
+          <h2>전 직장 경력</h2>
+          <Button onClick={() => createNewPastCareer()}>+ 추가하기</Button>
+        </Header2Container>
+        <ItemsContainer>
           {pastCareers.map((item, index) => {
             return (
-              <>
-                <Item
-                  key={item.id}
-                  deleteItem={() => {
-                    openPastCareerDeleteModal(item.id);
-                  }}
-                  moveUpItem={() => moveUpPastCareer(index)}
-                  moveDownItem={() => moveDownPastCareer(index)}
-                >
-                  <div>
-                    <DateRangeInput
-                      startDate={item.ca_start_date}
-                      endDate={item.ca_end_date}
-                      onStartDateChange={(
-                        e: React.ChangeEvent<HTMLInputElement>
-                      ) => handlePastCareerChange(e, item.id, "ca_start_date")}
-                      onEndDateChange={(
-                        e: React.ChangeEvent<HTMLInputElement>
-                      ) => handlePastCareerChange(e, item.id, "ca_end_date")}
-                      checkboxMessage="재직중"
-                    />
-                    <Input
-                      label="회사명"
-                      type="text"
-                      value={item.ca_title}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                        handlePastCareerChange(e, item.id, "ca_title")
-                      }
-                    />
-                    <Input
-                      label="직급/직책"
-                      type="text"
-                      value={item.ca_rank}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        handlePastCareerChange(e, item.id, "ca_rank")
-                      }
-                    />
-                    <Select
-                      label="고용형태"
-                      value={item.ca_contract}
-                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                        handlePastCareerChange(e, item.id, "ca_contract")
-                      }
-                    >
-                      <Select.Option value="">선택</Select.Option>
-                      <Select.Option value="FULL_TIME_1">정규직</Select.Option>
-                      <Select.Option value="INTERN_1">계약직</Select.Option>
-                      <Select.Option value="IRREGULAR_1">인턴</Select.Option>
-                      <Select.Option value="PART_TIME_1">
-                        프리랜서
-                      </Select.Option>
-                      <Select.Option value="FREELANCER_1">
-                        아르바이트
-                      </Select.Option>
-                    </Select>
-                    <Input
-                      label="담당업무"
-                      type="text"
-                      value={item.ca_content}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        handlePastCareerChange(e, item.id, "ca_content")
-                      }
-                    />
-                  </div>
-                </Item>
-              </>
+              <Item
+                key={item.id}
+                deleteItem={() => {
+                  openPastCareerDeleteModal(item.id);
+                }}
+                moveUpItem={() => moveUpPastCareer(index)}
+                moveDownItem={() => moveDownPastCareer(index)}
+              >
+                <InputsContainer>
+                  <DateRangeInput
+                    startDate={item.ca_start_date}
+                    endDate={item.ca_end_date}
+                    onStartDateChange={(
+                      e: React.ChangeEvent<HTMLInputElement>
+                    ) => handlePastCareerChange(e, item.id, "ca_start_date")}
+                    onEndDateChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      handlePastCareerChange(e, item.id, "ca_end_date")
+                    }
+                    checkboxMessage="재직중"
+                  />
+                  <Input
+                    label="회사명"
+                    type="text"
+                    value={item.ca_title}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                      handlePastCareerChange(e, item.id, "ca_title")
+                    }
+                  />
+                  <Input
+                    label="직급/직책"
+                    type="text"
+                    value={item.ca_rank}
+                    componentSize="small"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      handlePastCareerChange(e, item.id, "ca_rank")
+                    }
+                  />
+                  <Select
+                    label="고용형태"
+                    value={item.ca_contract}
+                    componentSize="small"
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                      handlePastCareerChange(e, item.id, "ca_contract")
+                    }
+                  >
+                    <Select.Option value="">선택</Select.Option>
+                    <Select.Option value="FULL_TIME_1">정규직</Select.Option>
+                    <Select.Option value="INTERN_1">계약직</Select.Option>
+                    <Select.Option value="IRREGULAR_1">인턴</Select.Option>
+                    <Select.Option value="PART_TIME_1">프리랜서</Select.Option>
+                    <Select.Option value="FREELANCER_1">
+                      아르바이트
+                    </Select.Option>
+                  </Select>
+                  <Input
+                    label="담당업무"
+                    type="text"
+                    value={item.ca_content}
+                    componentSize="small"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      handlePastCareerChange(e, item.id, "ca_content")
+                    }
+                  />
+                </InputsContainer>
+              </Item>
             );
           })}
-          <div>
-            <Button onClick={() => createNewPastCareer()}>+ 추가하기</Button>
-          </div>
-        </div>
+        </ItemsContainer>
 
         <hr />
 
-        <h2>학력사항</h2>
-        <div>
+        <Header2Container>
+          <h2>학력사항</h2>
+          <Button onClick={() => createNewEducation()}>+ 추가하기</Button>
+        </Header2Container>
+        <ItemsContainer>
           {educations.map((item, index) => {
             return (
               <div>
@@ -362,7 +359,7 @@ function App() {
                   moveUpItem={() => moveUpEducation(index)}
                   moveDownItem={() => moveDownEducation(index)}
                 >
-                  <div>
+                  <InputsContainer>
                     <DateRangeInput
                       startDate={item.edu_start_date}
                       endDate={item.edu_end_date}
@@ -426,18 +423,20 @@ function App() {
                       <Select.Option value="LEAVE">중단</Select.Option>
                       <Select.Option value="ABSENCE">휴학</Select.Option>
                     </Select>
-                  </div>
+                  </InputsContainer>
                 </Item>
               </div>
             );
           })}
-
-          <div>
-            <Button onClick={() => createNewEducation()}>+ 추가하기</Button>
-          </div>
-        </div>
-      </div>
-
+        </ItemsContainer>
+      </BodyContainer>
+      <FixedContainer>
+        <ButtonContainer>
+          <Button onClick={async () => handleSave()} size="large">
+            저장하기
+          </Button>
+        </ButtonContainer>
+      </FixedContainer>
       <Modal
         isOpen={isPastCareerModalOpen}
         onClose={() => closePastCareerDelteModal()}
@@ -472,7 +471,6 @@ function App() {
           </Button>
         </div>
       </Modal>
-
       <Modal
         isOpen={isEducationModalOpen}
         onClose={() => closeEducationDeleteModal()}
@@ -510,5 +508,51 @@ function App() {
     </Wrapper>
   );
 }
+
+const InputsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  padding: 1rem;
+`;
+
+const ItemsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+`;
+
+const Header2Container = styled.div`
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between; ;
+`;
+
+const FixedContainer = styled.div`
+  position: fixed;
+  background: white;
+  bottom: 0px;
+  left: 0px;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: end;
+  border-top: solid 1px grey;
+  height: 4rem;
+`;
+
+const BodyContainer = styled.div`
+  display: flex;
+  padding: 1rem 1rem 6rem 1rem;
+  flex-direction: column;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  margin: 4rem 1rem;
+`;
 
 export default App;
