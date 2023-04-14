@@ -36,16 +36,15 @@ styled-components: css 문법 그대로 사용할 수 있어서 추가했습니�
 ## 과제 진행 계획
 ### 기본 기능
 [X] App.tsx에서 missing type 채워넣기
-[ ] 필요한 컴포넌트 구현: button, input, card, item, option, select, wrapper component 구현
-[ ] App 페이지에 컴포넌트 적용
-[ ] 학력사항 구현하기
-[ ] 시작일, 종료일 입력 시 종료일이 시작일보다 빠르지 않도록 validation
+[X] 필요한 컴포넌트 구현: button, input, card, item, option, select, wrapper component 구현
+[X] App 페이지에 컴포넌트 적용
+[X] 학력사항 구현하기
+[X] 항목 삭제 시 확인 메세지 모달 띄우기
+[ ] 입력창 validation 추가
 [ ] 항목이 가장 위에 위치할 때 "위로" 버튼 숨기기, 항목이 가장 마지막에 위치할 때 "아래로" 버튼 숨기기
 [ ] 채워지지 않은 필드는 자동으로 저장 안함
 [ ] 각 폼 요소마다 최대 글자수 및 최소 글자수 지정 및 이에 맞는 input 컴포넌트 사이즈 조정
-[ ] 항목 삭제 시 확인 메세지 모달 띄우기
-[ ] 가독성을 높이는 코드 리팩토링
-
+[X] 가독성을 높이는 코드 리팩토링
 
 ### 추가 기능
 [ ] 폼 초기화 및 초기화 전 확인 메시지 띄우기
