@@ -70,4 +70,9 @@ const StyledButton = styled.button<StyledButtonProps>`
         ? "#1e40af"
         : "#f5f5f5"};
   }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
 `;

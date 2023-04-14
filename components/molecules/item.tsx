@@ -6,8 +6,8 @@ import styled from "styled-components";
 interface ItemProps {
   size?: "small" | "medium" | "large";
   deleteItem: () => void;
-  moveUpItem: () => void;
-  moveDownItem: () => void;
+  moveUpItem?: () => void;
+  moveDownItem?: () => void;
   children: React.ReactNode;
 }
 
@@ -26,22 +26,32 @@ export default function Item({
             X
           </Button>
           <FlexColumnContainer>
-            <Button
-              color="secondary"
-              size="small"
-              onClick={() => moveUpItem()}
-              disabled={moveUpItem === undefined}
-            >
-              위로
-            </Button>
-            <Button
-              color="secondary"
-              size="small"
-              onClick={() => moveDownItem()}
-              disabled={moveDownItem === undefined}
-            >
-              아래
-            </Button>
+            {moveUpItem ? (
+              <Button
+                color="secondary"
+                size="small"
+                onClick={() => moveUpItem()}
+              >
+                위로
+              </Button>
+            ) : (
+              <Button color="secondary" size="small" disabled={true}>
+                위로
+              </Button>
+            )}
+            {moveDownItem ? (
+              <Button
+                color="secondary"
+                size="small"
+                onClick={() => moveDownItem()}
+              >
+                아래
+              </Button>
+            ) : (
+              <Button color="secondary" size="small" disabled={true}>
+                아래
+              </Button>
+            )}
           </FlexColumnContainer>
         </ControlsContainer>
       </FlexContainer>

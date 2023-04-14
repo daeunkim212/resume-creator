@@ -279,8 +279,14 @@ function App() {
                 deleteItem={() => {
                   openPastCareerDeleteModal(item.id);
                 }}
-                moveUpItem={() => moveUpPastCareer(index)}
-                moveDownItem={() => moveDownPastCareer(index)}
+                moveUpItem={
+                  index === 0 ? undefined : () => moveUpPastCareer(index)
+                }
+                moveDownItem={
+                  index === pastCareers.length - 1
+                    ? undefined
+                    : () => moveDownPastCareer(index)
+                }
               >
                 <InputsContainer>
                   <DateRangeInput
@@ -356,8 +362,14 @@ function App() {
                 <Item
                   key={item.id}
                   deleteItem={() => openEducationDeleteModal(item.id)}
-                  moveUpItem={() => moveUpEducation(index)}
-                  moveDownItem={() => moveDownEducation(index)}
+                  moveUpItem={
+                    index === 0 ? undefined : () => moveUpEducation(index)
+                  }
+                  moveDownItem={
+                    index === pastCareers.length - 1
+                      ? undefined
+                      : () => moveDownEducation(index)
+                  }
                 >
                   <InputsContainer>
                     <DateRangeInput
